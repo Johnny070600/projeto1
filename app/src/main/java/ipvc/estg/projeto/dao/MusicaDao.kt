@@ -8,16 +8,15 @@ import androidx.room.Query
 import ipvc.estg.projeto.entities.Musica
 
 @Dao
-interface MusicaDao {
 
         interface MusicaDao {
-            @Query("SELECT * FROM Musica_table ORDER BY Musica ASC")
+            @Query("SELECT * FROM musica_table ORDER BY musica ASC")
             fun getAlphabetizedMusica(): LiveData<List<Musica>>
 
             @Insert(onConflict = OnConflictStrategy.IGNORE)
             suspend fun insert(musica: Musica)
 
-            @Query("DELETE FROM Musica_table")
+            @Query("DELETE FROM musica_table")
             suspend fun deleteAll()
         }
-    }
+

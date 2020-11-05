@@ -23,7 +23,7 @@ public abstract class MusicaDB : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    var titleDao = database.musicaDao()
+                    var musicaDao = database.musicaDao()
 
                     // Delete all content here.
                     // titleDao.deleteAll()

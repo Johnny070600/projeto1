@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import ipvc.estg.projeto.dao.MusicaDao
 import ipvc.estg.projeto.db.MusicaDB
 import ipvc.estg.projeto.db.MusicaRepository
 import ipvc.estg.projeto.entities.Musica
@@ -20,8 +21,8 @@ class MusicaViewModel(application: Application) : AndroidViewModel(application) 
     val allTitles: LiveData<List<Musica>>
 
     init {
-        val musicaDao = MusicaDB.getDatabase(application, viewModelScope).musicaDao()
-        repository = MusicaRepository(musicaDao)
+        val musicasDao = MusicaDB.getDatabase(application, viewModelScope).musicaDao()
+        repository = MusicaRepository(musicasDao)
         allTitles = repository.allMusicas
     }
 

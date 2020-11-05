@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        MusicaViewModel = ViewModelProvider(this).get(MusicaViewModel::class.java)
+        musicaViewModel = ViewModelProvider(this).get(MusicaViewModel::class.java)
         musicaViewModel.allTitles.observe(this, Observer { titles ->
             // Update the cached copy of the words in the adapter.
             titles?.let { adapter.setTitles(it) }
@@ -64,13 +64,13 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
 
-            val pMusica = data?.getStringExtra(AddingActivity.EXTRA_REPLY_TITLE)
-            val pBanda = data?.getStringExtra(AddingActivity.EXTRA_REPLY_NOTES)
+            val pMusica = data?.getStringExtra(AddingActivity.EXTRA_REPLY_MUSICA)
+            val pBanda = data?.getStringExtra(AddingActivity.EXTRA_REPLY_BANDA)
 
 
             if (pMusica != null && pBanda != null) {
                 val note = Musica(Musica = pMusica, Banda = pBanda)
-                MusicaViewModel.insert(note)
+                musicaViewModel.insert(note)
             }
         } else {
             Toast.makeText(
@@ -81,4 +81,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-cabras
