@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ipvc.estg.projeto.Adapters.MusicaAdapter
@@ -21,6 +22,7 @@ import ipvc.estg.projeto.viewModel.MusicaViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.recyclerview_item.*
+import java.nio.file.Files.delete
 
 
 class MainActivity : AppCompatActivity() {
@@ -44,12 +46,37 @@ class MainActivity : AppCompatActivity() {
 
         musicaViewModel = ViewModelProvider(this).get(MusicaViewModel::class.java)
         musicaViewModel.allTitles.observe(this, Observer { titles ->
-            // Update the cached copy of the words in the adapter.
             titles?.let { adapter.setTitles(it) }
+
+
+
+        val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                    adapter.getMusicaAt(viewHolder.getAdapterPosition())?.let {
+                        musicaViewModel.delete(
+                            it
+                        )
+                    }
+
+                }
+
+
+            }
+
+// attaching the touch helper to recycler view
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
+
         })
-
-
-        //VIEW MODEL
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
@@ -57,7 +84,28 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, newWordActivityRequestCode)
 
         }
+
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean{
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.remover -> {
+                Toast.makeText(this, "Para Remover dê Swipe para a esquerda no item que deseja eliminar", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.editar -> {
+                Toast.makeText(this, "Para Editar dê Swipe para a direita no item que deseja editar", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+           }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -80,4 +128,6 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
     }
+
+
 }

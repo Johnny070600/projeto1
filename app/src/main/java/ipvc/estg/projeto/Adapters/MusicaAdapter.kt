@@ -15,7 +15,7 @@ class MusicaAdapter internal constructor(
 ) : RecyclerView.Adapter<MusicaAdapter.TitleViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var Musicas = emptyList<Musica>() // Cached copy of words
+    private var musicas = emptyList<Musica>()
 
     inner class TitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val TextView1 : TextView = itemView.Musica
@@ -23,15 +23,18 @@ class MusicaAdapter internal constructor(
 
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TitleViewHolder {
         val itemView = inflater.inflate(R.layout.recyclerview_item, parent, false)
 
 
         return TitleViewHolder(itemView)
+
+
     }
 
     override fun onBindViewHolder(holder: TitleViewHolder, position: Int) {
-        val current = Musicas[position]
+        val current = musicas[position]
 
         holder.TextView1.text =current.Musica
         holder.TextView2.text=current.Banda
@@ -40,9 +43,14 @@ class MusicaAdapter internal constructor(
     }
 
     internal fun setTitles(titles: List<Musica>) {
-        this.Musicas = titles
+        this.musicas = titles
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = Musicas.size
+    override fun getItemCount() = musicas.size
+
+
+    fun getMusicaAt(position: Int): Musica? {
+        return musicas[position]
+    }
 }

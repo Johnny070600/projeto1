@@ -1,10 +1,7 @@
 package ipvc.estg.projeto.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import ipvc.estg.projeto.entities.Musica
 
 @Dao
@@ -18,5 +15,8 @@ import ipvc.estg.projeto.entities.Musica
 
             @Query("DELETE FROM musica_table")
             suspend fun deleteAll()
+
+            @Delete
+            fun delete(musica: Musica?)
         }
 
