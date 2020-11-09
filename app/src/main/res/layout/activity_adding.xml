@@ -21,11 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="214dp"
         android:ems="10"
+        android:hint="Nome"
         android:inputType="textPersonName"
-        android:text="Nome "
         app:layout_constraintTop_toTopOf="@+id/imageView"
-        tools:layout_editor_absoluteX="17dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="17dp" />
 
     <EditText
         android:id="@+id/descricao"
@@ -33,11 +33,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="275dp"
         android:ems="10"
+        android:hint="Descrição"
         android:inputType="textPersonName"
-        android:text="Descrição"
         app:layout_constraintTop_toTopOf="@+id/imageView"
-        tools:layout_editor_absoluteX="16dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
 
     <Button
         android:id="@+id/button_save"

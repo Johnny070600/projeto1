@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.editar -> {
-                Toast.makeText(this, "Para Editar dê Swipe para a direita no item que deseja editar", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Para Editar dê Swipe para a direita no item que deseja editar (Não Funciona)", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
