@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         //VIEW MODEL
 
-        val fab = findViewById<FloatingActionButton>(R.id.button)
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             val intent = Intent(this@MainActivity, AddingActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)

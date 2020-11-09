@@ -15,8 +15,8 @@ class AddingActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding)
-        text1=findViewById(R.id.Musica)
-        text2=findViewById(R.id.Banda)
+        text1=findViewById(R.id.nome)
+        text2=findViewById(R.id.descricao)
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
             val replyIntent = Intent()
