@@ -3,17 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/file"
         android:title="@string/Options"
-        app:showAsAction="never">
+        app:showAsAction="always">
 
+        <menu>
+            <item android:id="@+id/View_Monday"
+                android:title="@string/View_Monday"/>
+            <item android:id="@+id/View_Thursday"
+                android:title="@string/View_Thursday"/>
+            <item android:id="@+id/View_Wednesday"
+                android:title="@string/View_Wednesday"/>
+            <item android:id="@+id/View_Tuesday"
+                android:title="@string/View_Tuesday"/>
+            <item android:id="@+id/View_Friday"
+                android:title="@string/View_Friday"/>
+            <item android:id="@+id/View_Saturday"
+                android:title="@string/View_Saturday"/>
+            <item android:id="@+id/View_Sunday"
+                android:title="@string/View_Sunday"/>
+            <item android:id="@+id/Remove_Monday"
+                android:title="@string/Remove_Monday"/>
+            <item android:id="@+id/Remove_Thursday"
+                android:title="@string/Remove_Thursday"/>
+            <item android:id="@+id/Remove_Wednesday"
+                android:title="@string/Remove_Wednesday"/>
+            <item android:id="@+id/Remove_Tuesday"
+                android:title="@string/Remove_Tuesday"/>
+            <item android:id="@+id/Remove_Friday"
+                android:title="@string/Remove_Friday"/>
+            <item android:id="@+id/Remove_Saturday"
+                android:title="@string/Remove_Saturday"/>
+            <item android:id="@+id/Remove_Sunday"
+                android:title="@string/Remove_Sunday"/>
+            <item android:id="@+id/View_All"
+                android:title="@string/View_All"/>
+            <item android:id="@+id/remove_all"
+                android:title="@string/Remove_All"/>
 
-            <item android:id="@+id/remover"
-                android:title="Remover"
-                app:showAsAction="ifRoom" />
-
-            <item android:id="@+id/editar"
-                android:title="Editar"
-                app:showAsAction="ifRoom" />
-
+        </menu>
     </item>
 
 

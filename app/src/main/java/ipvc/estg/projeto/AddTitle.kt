@@ -8,15 +8,17 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 
-class AddingActivity : AppCompatActivity() {
+class AddTitle : AppCompatActivity() {
     private lateinit var text1: EditText
     private lateinit var text2: EditText
+    private lateinit var text3: EditText
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_adding)
-        text1=findViewById(R.id.nome)
-        text2=findViewById(R.id.descricao)
+        setContentView(R.layout.activity_add_title)
+        text1=findViewById(R.id.title)
+        text2=findViewById(R.id.notes)
+        text3=findViewById(R.id.date)
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
             val replyIntent = Intent()
@@ -25,11 +27,11 @@ class AddingActivity : AppCompatActivity() {
             } else {
                 val title = text1.text.toString()
                 val notes = text2.text.toString()
+                val date = text3.text.toString()
 
-
-                replyIntent.putExtra(EXTRA_REPLY_MUSICA, title.toString())
-                replyIntent.putExtra(EXTRA_REPLY_BANDA, notes.toString())
-
+                replyIntent.putExtra(EXTRA_REPLY_TITLE, title.toString())
+                replyIntent.putExtra(EXTRA_REPLY_NOTES, notes.toString())
+                replyIntent.putExtra(EXTRA_REPLY_DATE, date.toString())
 
 
                 setResult(Activity.RESULT_OK, replyIntent)
@@ -38,9 +40,9 @@ class AddingActivity : AppCompatActivity() {
         }
     }
     companion object {
-        const val EXTRA_REPLY_MUSICA= "ipvc.estg.projeto.musica"
-        const val EXTRA_REPLY_BANDA = "ipvc.estg.projeto.banda"
-
+        const val EXTRA_REPLY_TITLE= "ipvc.estg.projeto.title"
+        const val EXTRA_REPLY_NOTES = "ipvc.estg.projeto.notes"
+        const val EXTRA_REPLY_DATE = "ipvc.estg.projeto.date"
 
     }
 }
