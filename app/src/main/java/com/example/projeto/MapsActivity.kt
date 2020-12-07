@@ -1,19 +1,23 @@
 package com.example.projeto
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.projeto.api.EndPoints
 import com.example.projeto.api.ServiceBuilder
 import com.example.projeto.api.User
 import com.example.projeto.api.problemas
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import retrofit2.Call
 import retrofit2.Response
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -32,6 +36,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
+    private lateinit var lat : String
+    private lateinit var lng : String
+    private var userid : Int = 0
+    private var idsharedpreferences : Int = 0
+    private lateinit var nomesharedpreference : String
+    private var continenteLat : Double = 0.0
+    private var continenteLong : Double = 0.0
 
     companion object{
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1 // add implement location periodic updates
@@ -48,7 +59,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //Initialize fusedLocationClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
+        userid = intent.getIntExtra("userid",0)
 
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val call = request.getProblemas()
@@ -69,6 +80,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this@MapsActivity, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
+
+
+        locationCallback = object : LocationCallback() {    // é disparada sempre que novas coordenadas sao recebidas
+            override fun onLocationResult(p0: LocationResult) {
+                super.onLocationResult(p0)
+
+                var token2 = getSharedPreferences("username", Context.MODE_PRIVATE)
+                nomesharedpreference = token2.getString("username_login_atual"," ").toString()
+
+                lastLocation = p0.lastLocation
+                var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+                lat = loc.latitude.toString()
+                lng = loc.longitude.toString()
+
+                // preenche as coordenadas
+                findViewById<TextView>(R.id.txtcoordenadas).setText("Lat: " + loc.latitude + " - Long: " + loc.longitude)
+                Log.d("** Joao", "new location received - " + loc.latitude + " -" + loc.longitude)
+
+            }
+        }
+        createLocationRequest()
     }
 
 
@@ -80,7 +114,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun setUpMap() {
-        fun setUpMap(){
             if(ActivityCompat.checkSelfPermission(this,
                             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(this,
@@ -102,6 +135,74 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest()
+        // interval specifies the rate at which your app will like to receive updates.
+        locationRequest.interval = 10000 // intervalo com que as coordenadas vao ser recebidas
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY // maxima precisao
+    }
+
+    override fun onPause() {    // aplicacao interrompida, parar de receber novas coordenadas ( ocupa processamento, bateria...)
+        super.onPause()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        Log.d(" Joao", "onPause - removeLocationUpdates")
+    }
+
+    public override fun onResume() {        // ON RESUME EVENT
+        super.onResume()
+        startLocationUpdates()
+        Log.d(" Joao", "onResume - startLocationUpdates")
+    }
+
+    private fun startLocationUpdates() { //
+        if (ActivityCompat.checkSelfPermission(this,        // existe permissoes?
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE)
+            return
         }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+    }
+
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.login_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+
+            R.id.logout -> {
+                var token = getSharedPreferences("nome", Context.MODE_PRIVATE)
+                var editor = token.edit()
+                editor.putString("nome_login_atual"," ")        // Iguala valor a vazio, fica sem valor, credenciais soltas
+                editor.commit()                                     // Atualizar editor
+                val intent = Intent(this@MapsActivity, Login::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.addpoint -> {
+
+                val intent2 = Intent(this, ActivityAddPoint::class.java)
+                intent2.putExtra("latitude",lat)
+                intent2.putExtra("longitude", lng)
+                intent2.putExtra("userid",userid)
+                startActivity(intent2)
+                true
+            }
+            R.id.removepoint -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
     }
 }

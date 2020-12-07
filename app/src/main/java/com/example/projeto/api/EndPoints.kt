@@ -16,4 +16,12 @@ interface EndPoints {
   fun postLogin(
           @Field("name") name: String?,
           @Field("password") password: String?): Call<OutputPost>
+
+  @FormUrlEncoded
+  @POST("/myslim/api/problemas")
+  fun postAddPoint(
+          @Field("descr") descr: String?,
+          @Field("latitude") latitude: String?,
+          @Field("longitude") longitude: String?,
+          @Field("user_id") user_id: Int) : Call<OutputPost>
 }
