@@ -11,6 +11,10 @@ interface EndPoints {
   @GET("/myslim/api/problemas")
   fun getProblemas(): Call<List<problemas>>
 
+  @GET("myslim/api/problema/{id}")
+  fun deleteProblema(
+          @Path("id") id: Int): Call<OutputPost>
+
   @FormUrlEncoded
   @POST("/myslim/api/User")
   fun postLogin(

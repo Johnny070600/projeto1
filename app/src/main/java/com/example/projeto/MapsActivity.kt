@@ -45,14 +45,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var continenteLong : Double = 0.0
 
     companion object{
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1 // add implement location periodic updates
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         private const val REQUEST_CHECK_SETTINGS = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -83,7 +83,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 
-        locationCallback = object : LocationCallback() {    // é disparada sempre que novas coordenadas sao recebidas
+        locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
 
@@ -96,7 +96,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 lat = loc.latitude.toString()
                 lng = loc.longitude.toString()
 
-                // preenche as coordenadas
+
                 findViewById<TextView>(R.id.txtcoordenadas).setText("Lat: " + loc.latitude + " - Long: " + loc.longitude)
                 Log.d("** Joao", "new location received - " + loc.latitude + " -" + loc.longitude)
 
@@ -125,8 +125,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // 2
                 fusedLocationClient.lastLocation.addOnSuccessListener(this){location ->
-                    //Got last Known location. In some rare situation this can be null.
-                    //3
+
                     if(location != null) {
                         lastLocation = location
                         Toast.makeText(this@MapsActivity, lastLocation.toString(), Toast.LENGTH_SHORT).show()
@@ -139,25 +138,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun createLocationRequest() {
         locationRequest = LocationRequest()
-        // interval specifies the rate at which your app will like to receive updates.
-        locationRequest.interval = 10000 // intervalo com que as coordenadas vao ser recebidas
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY // maxima precisao
+        locationRequest.interval = 10000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
-    override fun onPause() {    // aplicacao interrompida, parar de receber novas coordenadas ( ocupa processamento, bateria...)
+    override fun onPause() {
         super.onPause()
         fusedLocationClient.removeLocationUpdates(locationCallback)
         Log.d(" Joao", "onPause - removeLocationUpdates")
     }
 
-    public override fun onResume() {        // ON RESUME EVENT
+    public override fun onResume() {
         super.onResume()
         startLocationUpdates()
         Log.d(" Joao", "onResume - startLocationUpdates")
     }
 
-    private fun startLocationUpdates() { //
-        if (ActivityCompat.checkSelfPermission(this,        // existe permissoes?
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
@@ -183,8 +181,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.logout -> {
                 var token = getSharedPreferences("nome", Context.MODE_PRIVATE)
                 var editor = token.edit()
-                editor.putString("nome_login_atual"," ")        // Iguala valor a vazio, fica sem valor, credenciais soltas
-                editor.commit()                                     // Atualizar editor
+                editor.putString("nome_login_atual"," ")
+                editor.commit()
                 val intent = Intent(this@MapsActivity, Login::class.java)
                 startActivity(intent)
                 true
@@ -199,6 +197,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 true
             }
             R.id.removepoint -> {
+                val intent3 = Intent(this, RemoveActivity::class.java)
+                startActivity(intent3)
                 true
             }
             else -> super.onOptionsItemSelected(item)
