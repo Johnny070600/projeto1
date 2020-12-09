@@ -3,6 +3,11 @@ package com.example.projeto
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +15,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -25,10 +32,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import javax.security.auth.callback.Callback
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener
+{
 
     private lateinit var mMap: GoogleMap
     private lateinit var problems:List<problemas>
@@ -44,6 +53,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var continenteLat : Double = 0.0
     private var continenteLong : Double = 0.0
 
+    ////SENSORES////
+    var sensor : Sensor? = null
+    var sensorManager : SensorManager? = null
+
     companion object{
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         private const val REQUEST_CHECK_SETTINGS = 2
@@ -56,6 +69,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        ////SENSORES////
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_LIGHT)
 
         //Initialize fusedLocationClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -106,7 +123,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -144,12 +160,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
+        sensorManager!!.unregisterListener(this)
         fusedLocationClient.removeLocationUpdates(locationCallback)
         Log.d(" Joao", "onPause - removeLocationUpdates")
     }
 
     public override fun onResume() {
         super.onResume()
+        sensorManager!!.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL)
         startLocationUpdates()
         Log.d(" Joao", "onResume - startLocationUpdates")
     }
@@ -203,6 +221,56 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        try {
+
+            if (event!!.values[0] < 30) {
+
+
+                try {
+                    // Customise the styling of the base map using a JSON object defined
+                    // in a raw resource file.
+                    val success = mMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    this, R.raw.mapstyle))
+                    if (!success) {
+                        Log.e("MapsActivity", "Style parsing failed.")
+                    }
+                } catch (e: Resources.NotFoundException) {
+                    Log.e("MapsActivity", "Can't find style. Error: ", e)
+                }
+
+
+
+            } else {
+
+                findViewById<FrameLayout>(R.id.map).visibility = View.VISIBLE
+                try {
+                    // Customise the styling of the base map using a JSON object defined
+                    // in a raw resource file.
+                    val success = mMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    this, R.raw.mapstyle2))
+                    if (!success) {
+                        Log.e("MapsActivity", "Style parsing failed.")
+                    }
+                } catch (e: Resources.NotFoundException) {
+                    Log.e("MapsActivity", "Can't find style. Error: ", e)
+                }
+
+            }
+
+        }
+        catch (e : Exception)
+        {
+
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
     }
 }
