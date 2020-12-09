@@ -4,33 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RemoveActivity">
+    tools:context=".RemoveActivity"
+    android:background="@drawable/fundoazul">
 
     <EditText
         android:id="@+id/remover"
         android:layout_width="222dp"
         android:layout_height="42dp"
-        android:layout_marginTop="244dp"
-        android:layout_marginEnd="172dp"
-        android:layout_marginRight="172dp"
+        android:layout_marginBottom="452dp"
         android:ems="10"
         android:hint="ID"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="320dp"
-        android:layout_height="85dp"
+        android:layout_width="383dp"
+        android:layout_height="94dp"
         android:layout_marginBottom="138dp"
         android:text="Insira o Id do problema que deseja remover"
         app:layout_constraintBottom_toTopOf="@+id/remover"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp" />
+        tools:layout_editor_absoluteX="12dp" />
 
     <Button
         android:id="@+id/button"
